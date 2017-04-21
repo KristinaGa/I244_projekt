@@ -1,0 +1,8 @@
+	<h3>Valiku tulemus</h3>
+	<?php
+	if (empty($_POST)) {
+		echo "<p>Hääletamiseks vali pilt!</p>";
+	} else {
+		echo "Hääletasid pildi nr " . $_POST["pilt"] . " poolt.";
+	}
+	?>
