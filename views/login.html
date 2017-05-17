@@ -1,0 +1,16 @@
+<div class="login-box">
+	<div class="box-header">
+		<h2>Logi sisse</h2>
+	</div>
+	
+	<form action="?page=login" method="POST" >
+		<input type="text" name="user" placeholder="Kasutajanimi"/><br/>
+		<input type="password" name="pass" placeholder="Parool"/><br/>
+		<input type="submit" value="Sisenen"/>
+	</form>
+	<?php if (isset($errors)):?>
+		<?php foreach($errors as $error):?>
+			<div style="color:red;"><?php echo htmlspecialchars($error); ?></div>
+		<?php endforeach;?>
+	<?php endif;?>
+</div>

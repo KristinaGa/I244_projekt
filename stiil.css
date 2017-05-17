@@ -1,0 +1,142 @@
+html {
+	height:100%;
+}
+
+#sisse {
+	background: url('pildid/v2rav.png') no-repeat center;
+	display: inline-block;
+	width: 100%;
+	padding:235px 0px;
+	text-align: center;
+	text-decoration: none;
+	color: gold;
+	font-weight: bold;
+	font-size: 30px;
+	text-shadow:0px 0px 10px black;
+}
+
+body {
+	background: linear-gradient(to bottom right, #ff8080, #ffe6e6);
+	height:100%;
+	margin:0;
+}
+#wrap{
+	width: 800px;
+	margin: auto;
+	overflow: auto;
+	min-height:100%;
+}
+#menu {
+	list-style: none;
+	background: PaleGreen;
+	margin: 0px;
+	padding: 0px;
+	text-align: center;
+}
+#menu li, #menu a {
+	display: inline-block;
+}
+#menu a {
+	padding:5px 20px;
+	color: black;
+	text-decoration: none;
+}
+#menu a:hover {
+	background: Aquamarine;
+	color: DarkSlateGray;
+}
+#content {
+	padding:10px;
+	text-align:center;
+}
+#login{
+	margin:auto;
+	width: 35%;	
+	margin-top:25%;
+}
+.puur {
+	border: dashed grey 2px;
+	margin:20px;
+	float:left;
+	width: 40%;
+	padding:10px;
+}
+.puur img {
+	height: 50px;
+
+}
+.puur h5 {
+	margin: 0px;
+}
+.clear {
+	clear:both;
+}
+
+.login-box {
+	background-color: white;
+	max-width: 340px;
+	margin: 0 auto;
+	position: relative;
+	top: 80px;
+	border-radius: 5px;
+	text-align: center;
+	font-weight: 700;
+	font-size: 1em;
+	color: #666565;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	line-height: 2em;
+	border:1px solid #666565;
+}
+
+.login-box .box-header {
+	background-color: #ffb3b3;
+	margin-top: 0;
+	font-family: 'Roboto Slab', serif;
+}
+
+.login-box input {
+	margin-bottom: 20px;
+	padding: 8px;
+	border: 1px solid #666565;
+	border-radius: 2px;
+	font-size: .9em;
+	color: #666565;
+}
+
+.login-box input:focus {
+	outline: none;
+	border-color: #665851;
+	transition: 0.5s;
+	color: #665851;
+}
+
+.login-box button {
+	margin-top: 0px;
+	border: 0;
+	border-radius: 2px;
+	color: white;
+	padding: 10px;
+	text-transform: uppercase;
+	font-weight: 400;
+	font-size: 0.7em;
+	letter-spacing: 1px;
+	background-color: #665851;
+	cursor:pointer;
+	outline: none;
+}
+
+.login-box button:hover {
+	opacity: 0.7;
+	transition: 0.5s;
+}
+
+.login-box button:hover {
+	opacity: 0.7;
+	transition: 0.5s;
+}
+
+.selected {
+	color: #665851!important;
+	transition: 0.5s;
+}
