@@ -15,20 +15,24 @@ switch($page){
 		logi();
 	break;
 
-	case "loomad":
-		kuva_puurid();
+	case "avaleht":
+		countdown();
+	break;
+
+	case "eelarve":
+		eelarve();
+	break;
+
+	case "kylalised":
+		kylaline();
+	break;
+
+	case "seaded":
+		seaded();
 	break;
 
 	case "logout":
 		logout();
-	break;
-
-	case "lisa":
-		lisa();
-	break;
-
-	case "muuda":
-		muuda();
 	break;
 
 	default:

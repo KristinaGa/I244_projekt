@@ -2,24 +2,12 @@ html {
 	height:100%;
 }
 
-#sisse {
-	background: url('pildid/v2rav.png') no-repeat center;
-	display: inline-block;
-	width: 100%;
-	padding:235px 0px;
-	text-align: center;
-	text-decoration: none;
-	color: gold;
-	font-weight: bold;
-	font-size: 30px;
-	text-shadow:0px 0px 10px black;
-}
-
 body {
 	background: linear-gradient(to bottom right, #ff8080, #ffe6e6);
 	height:100%;
 	margin:0;
 }
+
 #wrap{
 	width: 800px;
 	margin: auto;
@@ -28,22 +16,27 @@ body {
 }
 #menu {
 	list-style: none;
-	background: PaleGreen;
+	background-color: rgba(255, 77, 77, 0);
 	margin: 0px;
 	padding: 0px;
 	text-align: center;
+	color:#665851;
+	font-family: 'Roboto Slab', serif;
+	border-bottom: 1px solid #665851;
 }
+
 #menu li, #menu a {
 	display: inline-block;
 }
+
 #menu a {
 	padding:5px 20px;
 	color: black;
 	text-decoration: none;
 }
 #menu a:hover {
-	background: Aquamarine;
-	color: DarkSlateGray;
+	color: #665851;
+	background-color: rgba(255, 77, 77, 0.5);
 }
 #content {
 	padding:10px;

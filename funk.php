@@ -14,7 +14,7 @@ function connect_db(){
 function logi(){
 	global $connection;
 	if(!empty($_SESSION["user"])) {
-		header("Location: ?page=loomad");
+		header("Location: ?page=avaleht");
 	}else{
 		if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			if($_POST["user"] == '' || $_POST["pass"] == ''){
@@ -34,7 +34,7 @@ function logi(){
 					if($rida){
 						$_SESSION["role"] = $role["role"];
 						$_SESSION["user"] = $_POST["user"];
-						header("Location: ?page=loomad");
+						header("Location: ?page=avaleht");
 					} else {
 						header("Location: ?page=login");
 					}
@@ -51,8 +51,13 @@ function logout(){
 	header("Location: ?");
 }
 
-function kuva_puurid(){
-	// siia on vaja funktsionaalsust
+function countdown(){
+	//siia tuleb countdowni asi
+}
+
+
+function eelarve(){
+	//siia tuleb eelarve leht
 	global $connection;	
 	
 	if(empty($_SESSION["user"])) {
@@ -71,7 +76,7 @@ function kuva_puurid(){
 include_once('views/puurid.html');
 }	
 
-function lisa() {
+function kylalised() {
 	global $connection;
 	if(empty($_SESSION["user"])) {
 		header("Location: ?page=login");
@@ -109,7 +114,7 @@ include_once('views/loomavorm.html');
 }
 
 
-function upload($name){
+function seaded($name){
 	$allowedExts = array("jpg", "jpeg", "gif", "png");
 	$allowedTypes = array("image/gif", "image/jpeg", "image/png","image/pjpeg");
 	$extension = end(explode(".", $_FILES[$name]["name"]));
@@ -136,58 +141,5 @@ function upload($name){
 	} else {
 		return "";
 	}
-}
-
-function hangi_loom($id){
-	global $connection;
-	$vaartus = mysqli_real_escape_string($connection, $id);
-		
-	$sql ="SELECT nimi, vanus, liik, PUUR FROM kgarmatj_loomaaed WHERE id='$id'";
-		
-	$result = mysqli_query($connection, $sql) or die("Sellist looma ei ole!");
-		$looma_info = array();
-	while($rida = mysqli_fetch_assoc($result)) {
-		$looma_info=$rida;
-	}
-	return $looma_info;
-}
-
-function muuda() {
-		
-	global $connection;
-	if(empty($_SESSION["user"])) {
-		header("Location: ?page=login");
-	} else {
-		if($_SESSION["role"] == 'admin') {
-			if($_SERVER['REQUEST_METHOD'] == 'POST') {
-				if($_POST["id"] == ''){
-					header("Location: ?page=loomad");
-				} else {
-					$muutuja = hangi_loom($_POST["id"]);
-						$eraldi_id = $_POST["id"];
-						upload('liik');
-						$nimi = mysqli_real_escape_string ($connection, $_POST["nimi"]);
-						$puur = mysqli_real_escape_string ($connection,  $_POST["puur"]);
-						$liik = mysqli_real_escape_string ($connection,"pildid/".$_FILES["liik"]["name"]);
-						$muutuja = [
-							"nimi" => $nimi,
-							"puur" => $puur,
-							"liik" => $liik,
-							];
-						$sql = "UPDATE kgarmatj_loomaaed SET nimi='$nimi', puur ='$puur', liik = '$liik' WHERE id='$eraldi_id'";
-						$result = mysqli_query($connection, $sql);
-						$rida = mysqli_affected_rows($connection);
-							if($rida) {
-								header("Location: ?page=loomad");
-							} else {
-								header("Location: ?page=pealeht");
-							}
-					}
-				}
-			} else { 
-				header("Location: ?page=loomad");
-		}
-	}
-		include_once('views/editvorm.html');
 }
 ?>
