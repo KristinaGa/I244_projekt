@@ -18,3 +18,15 @@ INSERT INTO `<sinu kasutajanimi/kood>_loomaaed` (`id`, `nimi`, `puur`, `liik`) V
 (9, 'Maali', 7, 'pildid/cow.png'),
 (10, 'Kasper', 7, 'pildid/cow.png'),
 (11, 'Mingi', 7, 'pildid/cow.png');
+
+CREATE TABLE IF NOT EXISTS `kgarmatj_seaded` (
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `user_id` int(11),
+  `pulma_kuupaev` date,
+  `nimi_1` varchar(100),
+  `nimi_2` varchar(100),
+  `countdown_text` varchar(200),
+  `menuu_1` varchar(100),
+  `menuu_2` varchar(100),
+  foreign key (user_id) references kgarmatj_kylastajad (id)
+);

@@ -114,32 +114,31 @@ include_once('views/loomavorm.html');
 }
 
 
-function seaded($name){
-	$allowedExts = array("jpg", "jpeg", "gif", "png");
-	$allowedTypes = array("image/gif", "image/jpeg", "image/png","image/pjpeg");
-	$extension = end(explode(".", $_FILES[$name]["name"]));
+function seaded(){
+	global $connection;
+	if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$pulma_kuupaev = mysqli_real_escape_string ($connection, $_POST['pulma_kuupaev']);
+			$nimi_1 = mysqli_real_escape_string ($connection, $_POST['nimi_1']);
+			$nimi_2 = mysqli_real_escape_string ($connection, $_POST['nimi_2']);
+			$countdown_text = mysqli_real_escape_string ($connection, $_POST['countdown_text']);
+			$menuu_1 = mysqli_real_escape_string ($connection, $_POST['menuu_1']);
+			$menuu_2 = mysqli_real_escape_string ($connection, $_POST['menuu_2']);
+			$sql_insert = "insert into kgarmatj_seaded
+									  ( pulma_kuupaev
+									  , nimi_1
+									  , nimi_2
+									  , countdown_text
+									  , menuu_1
+									  , menuu_2)
+							  values ( '$pulma_kuupaev'
+									 , '$nimi_1'
+									 , '$nimi_2'
+									 , '$countdown_text'
+									 , '$menuu_1'
+									 , '$menuu_2')";
+			$sql_update = "";
 
-	if ( in_array($_FILES[$name]["type"], $allowedTypes)
-		&& ($_FILES[$name]["size"] < 100000)
-		&& in_array($extension, $allowedExts)) {
-    // fail õiget tüüpi ja suurusega
-		if ($_FILES[$name]["error"] > 0) {
-			$_SESSION['notices'][]= "Return Code: " . $_FILES[$name]["error"];
-			return "";
-		} else {
-      // vigu ei ole
-			if (file_exists("pildid/" . $_FILES[$name]["name"])) {
-        // fail olemas ära uuesti lae, tagasta failinimi
-				$_SESSION['notices'][]= $_FILES[$name]["name"] . " juba eksisteerib. ";
-				return "pildid/" .$_FILES[$name]["name"];
-			} else {
-        // kõik ok, aseta pilt
-				move_uploaded_file($_FILES[$name]["tmp_name"], "pildid/" . $_FILES[$name]["name"]);
-				return "pildid/" .$_FILES[$name]["name"];
-			}
 		}
-	} else {
-		return "";
-	}
+include_once('views/seaded.html');
 }
 ?>

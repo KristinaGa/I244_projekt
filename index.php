@@ -1,6 +1,6 @@
 <?php
-require_once('funk.php');
 session_start();
+require_once('funk.php');
 connect_db();
 
 $page="pealeht";
