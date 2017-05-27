@@ -53,7 +53,19 @@ function logout(){
 }
 
 function countdown(){
-	//siia tuleb countdowni asi
+	global $connection;
+	$user_id = mysqli_real_escape_string ($connection, $_SESSION["useird"]);
+	$sql = "SELECT pulma_kuupaev, concat(nimi_1,' ja ', nimi_2, ' pulmadeni on: ') countdown_text FROM kgarmatj_seaded WHERE user_id='$user_id'";
+	$result = mysqli_query($connection, $sql);
+	$result_array = mysqli_fetch_assoc($result);
+	$pulma_kuupaev = $result_array['pulma_kuupaev'];
+	$countdown_text = $result_array['countdown_text'];
+
+	if ($pulma_kuupaev == '0000-00-00') {
+		$pulma_kuupaev = '';
+	}
+
+	include_once('views/avaleht.html');
 }
 
 
@@ -128,7 +140,6 @@ function seaded(){
 			$pulma_kuupaev = mysqli_real_escape_string ($connection, $_POST['pulma_kuupaev']);
 			$nimi_1 = mysqli_real_escape_string ($connection, $_POST['nimi_1']);
 			$nimi_2 = mysqli_real_escape_string ($connection, $_POST['nimi_2']);
-			$countdown_text = mysqli_real_escape_string ($connection, $_POST['countdown_text']);
 			$menuu_1 = mysqli_real_escape_string ($connection, $_POST['menuu_1']);
 			$menuu_2 = mysqli_real_escape_string ($connection, $_POST['menuu_2']);
 			$sql_insert = "insert into kgarmatj_seaded
@@ -136,14 +147,12 @@ function seaded(){
 									  ,	pulma_kuupaev
 									  , nimi_1
 									  , nimi_2
-									  , countdown_text
 									  , menuu_1
 									  , menuu_2)
 							  values ( '$user_id'
 							  		 , '$pulma_kuupaev'
 									 , '$nimi_1'
 									 , '$nimi_2'
-									 , '$countdown_text'
 									 , '$menuu_1'
 									 , '$menuu_2')";
 			
@@ -152,7 +161,6 @@ function seaded(){
 				set   pulma_kuupaev = '$pulma_kuupaev'
 					, nimi_1 = '$nimi_1'
 					, nimi_2 = '$nimi_2'
-					, countdown_text = '$countdown_text'
 					, menuu_1 = '$menuu_1'
 					, menuu_2 = '$menuu_1'
 				where user_id = '$user_id'

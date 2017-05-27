@@ -25,7 +25,6 @@ CREATE TABLE IF NOT EXISTS `kgarmatj_seaded` (
   `pulma_kuupaev` date,
   `nimi_1` varchar(100),
   `nimi_2` varchar(100),
-  `countdown_text` varchar(200),
   `menuu_1` varchar(100),
   `menuu_2` varchar(100),
   foreign key (user_id) references kgarmatj_kylastajad (id)

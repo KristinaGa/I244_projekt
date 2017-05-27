@@ -1,0 +1,22 @@
+<script type="text/javascript">
+$(function(){
+    var countdown_time = "<?php echo $pulma_kuupaev ?>";
+    countdown_time.replace('1', '/');
+    if (countdown_time) {
+        $('#countdown_text').countdown(countdown_time, function(event) {
+        var $this = $(this).html(event.strftime(''
+          + '<span>%-D</span> päeva '
+          + '<span>%H</span> tundi '
+          + '<span>%M</span> minutit '
+          + '<span>%S</span> sekundit'));
+      });
+    }
+});
+
+</script>
+
+<h2><?php echo $countdown_text ?></h2>
+<div class="countdown">
+    <div id="countdown_text"></div>
+</div>
+
