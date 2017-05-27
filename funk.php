@@ -34,6 +34,7 @@ function logi(){
 					if($rida){
 						$_SESSION["role"] = $role["role"];
 						$_SESSION["user"] = $_POST["user"];
+						$_SESSION["useird"] = $role["id"];
 						header("Location: ?page=avaleht");
 					} else {
 						header("Location: ?page=login");
@@ -116,7 +117,14 @@ include_once('views/loomavorm.html');
 
 function seaded(){
 	global $connection;
+	$teade = '';
+	$user_id = mysqli_real_escape_string ($connection, $_SESSION["useird"]);
+	$sql = "SELECT * FROM kgarmatj_seaded WHERE user_id='$user_id'";
+	$result = mysqli_query($connection, $sql);
+	$result_array = mysqli_fetch_assoc($result);
+
 	if($_SERVER['REQUEST_METHOD'] == 'POST') {
+			$user_id = mysqli_real_escape_string ($connection, $_SESSION["useird"]);
 			$pulma_kuupaev = mysqli_real_escape_string ($connection, $_POST['pulma_kuupaev']);
 			$nimi_1 = mysqli_real_escape_string ($connection, $_POST['nimi_1']);
 			$nimi_2 = mysqli_real_escape_string ($connection, $_POST['nimi_2']);
@@ -124,21 +132,51 @@ function seaded(){
 			$menuu_1 = mysqli_real_escape_string ($connection, $_POST['menuu_1']);
 			$menuu_2 = mysqli_real_escape_string ($connection, $_POST['menuu_2']);
 			$sql_insert = "insert into kgarmatj_seaded
-									  ( pulma_kuupaev
+									  ( user_id
+									  ,	pulma_kuupaev
 									  , nimi_1
 									  , nimi_2
 									  , countdown_text
 									  , menuu_1
 									  , menuu_2)
-							  values ( '$pulma_kuupaev'
+							  values ( '$user_id'
+							  		 , '$pulma_kuupaev'
 									 , '$nimi_1'
 									 , '$nimi_2'
 									 , '$countdown_text'
 									 , '$menuu_1'
 									 , '$menuu_2')";
-			$sql_update = "";
+			
+			$sql_update = "
+				update kgarmatj_seaded
+				set   pulma_kuupaev = '$pulma_kuupaev'
+					, nimi_1 = '$nimi_1'
+					, nimi_2 = '$nimi_2'
+					, countdown_text = '$countdown_text'
+					, menuu_1 = '$menuu_1'
+					, menuu_2 = '$menuu_1'
+				where user_id = '$user_id'
+			";
 
-		}
+			# salvestamine ja muutmine -> kui baasis pole juba salvestatud seadeid, siis insertime 
+			# muul juhul uuendame
+			if (empty($result_array)){
+				mysqli_query($connection, $sql_insert);	
+				$teade = 'Seaded salvestatud';
+			} else {
+				mysqli_query($connection, $sql_update);	
+				$teade = 'Seaded uuendatud';
+			};
+
+	} else {
+
+		$pulma_kuupaev = mysqli_real_escape_string ($connection, $result_array['pulma_kuupaev']);
+		$nimi_1 = mysqli_real_escape_string ($connection, $result_array['nimi_1']);
+		$nimi_2 = mysqli_real_escape_string ($connection, $result_array['nimi_2']);
+		$countdown_text = mysqli_real_escape_string ($connection, $result_array['countdown_text']);
+		$menuu_1 = mysqli_real_escape_string ($connection, $result_array['menuu_1']);
+		$menuu_2 = mysqli_real_escape_string ($connection, $result_array['menuu_2']);		
+	}
 include_once('views/seaded.html');
 }
 ?>
