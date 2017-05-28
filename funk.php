@@ -424,7 +424,6 @@ function seaded(){
 		$pulma_kuupaev = mysqli_real_escape_string ($connection, $result_array['pulma_kuupaev']);
 		$nimi_1 = mysqli_real_escape_string ($connection, $result_array['nimi_1']);
 		$nimi_2 = mysqli_real_escape_string ($connection, $result_array['nimi_2']);
-		$countdown_text = mysqli_real_escape_string ($connection, $result_array['countdown_text']);
 		$menuu_1 = mysqli_real_escape_string ($connection, $result_array['menuu_1']);
 		$menuu_2 = mysqli_real_escape_string ($connection, $result_array['menuu_2']);		
 	}
