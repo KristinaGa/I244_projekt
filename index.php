@@ -24,7 +24,7 @@ switch($page){
 	break;
 
 	case "kylalised":
-		kylaline();
+		kylalised();
 	break;
 
 	case "seaded":

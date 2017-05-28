@@ -1,0 +1,59 @@
+<?php
+
+?>
+
+
+
+<script type="text/javascript">
+$(function(){
+    $('#lisa').click(function () {
+        $('#tabelirida').clone().appendTo('#kylalised_tabel');
+    });
+});    
+
+</script>
+<form name='kylalised_vorm' action="?page=kylalised" method="POST">
+    <table id="kylalised_tabel">
+        <tr>
+            <th>Nimi</th>
+            <th>Kaaslase nimi</th>
+            <th>Tulemas</th>
+            <th>Menüüvalik</th>
+            <th>Ööbimissoov</th>
+        </tr>
+        <tr id="tabelirida">
+            <td>
+                <input type="text" name="nimi[]">
+            </td>
+            <td>
+                <input type="text" name="kaaslase_nimi[]">
+            </td>
+            <td>
+                <select name="tulemas[]">
+                    <option value="O"  selected></option>
+                    <option value="Y">Jah</option>
+                    <option value="N">Ei</option>
+                </select>
+            </td>
+            <td>
+                <select name="menuu_valik[]">
+                    <option value="O"  selected></option>
+                    <option value="<?php echo $result_array['menuu_1']?>"><?php echo $result_array['menuu_1']?></option>
+                    <option value="<?php echo $result_array['menuu_2']?>"><?php echo $result_array['menuu_2']?></option>                    
+                </select>
+            </td>
+            <td>
+             <select name="oobimine[]">
+                    <option value="O"  selected></option>
+                    <option value="Y">Jah</option>
+                    <option value="N">Ei</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <button type="submit" name="salvesta">Salvesta</button>
+    <button type="button" name="lisa" id="lisa">Lisa rida</button>
+    <h2><?php echo $teade ?></h2>
+</form>
+
+

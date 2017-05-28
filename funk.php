@@ -63,6 +63,7 @@ function countdown(){
 
 	if ($pulma_kuupaev == '0000-00-00') {
 		$pulma_kuupaev = '';
+		$countdown_text = '';
 	}
 
 	include_once('views/avaleht.html');
@@ -91,39 +92,76 @@ include_once('views/puurid.html');
 
 function kylalised() {
 	global $connection;
-	if(empty($_SESSION["user"])) {
-		header("Location: ?page=login");
+	$user_id = mysqli_real_escape_string($connection, $_SESSION["useird"]);
+	$sql = "SELECT * FROM kgarmatj_seaded WHERE user_id='$user_id'";
+	$result = mysqli_query($connection, $sql);
+	$result_array = mysqli_fetch_assoc($result);
+
+
+	$teade = '';
+
+	if($_SERVER['REQUEST_METHOD'] == 'POST') {
+		print_r($_POST);
+		for ($i = 0; $i < count($_POST['nimi']); $i++) {
+
+			$rea_jarg = mysqli_real_escape_string($connection, $i);
+			$nimi = mysqli_real_escape_string($connection, $_POST['nimi'][$i]);
+			$kaaslase_nimi = mysqli_real_escape_string($connection, $_POST['kaaslase_nimi'][$i]);
+			$tulemas = mysqli_real_escape_string($connection, $_POST['tulemas'][$i]);
+			$menuu_valik = mysqli_real_escape_string($connection, $_POST['menuu_valik'][$i]);
+			$oobimine = mysqli_real_escape_string($connection, $_POST['oobimine'][$i]);
+
+			$sql_insert = "insert into kgarmatj_kylalised
+									  ( user_id
+									  ,	rea_jarg
+									  , nimi
+									  , kaaslase_nimi
+									  , tulemas
+									  , menuu_valik
+									  , oobimine)
+							  values ( '$user_id'
+							  		 , '$rea_jarg'
+									 , '$nimi'
+									 , '$kaaslase_nimi'
+									 , '$tulemas'
+									 , '$menuu_valik'
+									 , '$oobimine')";
+
+			mysqli_query($connection, $sql_insert);
+	}
 	} else {
-		if($_SESSION["role"] == 'admin') {
-		if($_SERVER['REQUEST_METHOD'] == 'POST') {
-			if($_POST["nimi"] == '' || $_POST["puur"] == '' ) {
-				$errors =array();
-				if(empty($_POST["nimi"])) {
-					$errors[] = "Palun sisesta nimi!";
-				}
-				if(empty($_POST["puur"])){
-					$errors[] = "Palun sisesta puur!";
-				}
-				} else {
-					upload('liik');
-					$nimi = mysqli_real_escape_string ($connection, $_POST["nimi"]);
-					$puur = mysqli_real_escape_string ($connection, $_POST["puur"]);
-					$liik = mysqli_real_escape_string ($connection, "pildid/".$_FILES["liik"]["name"]);
-					$sql = "INSERT INTO kgarmatj_loomaaed (nimi, PUUR, liik) VALUES ('$nimi','$puur','$liik')";
-					$result = mysqli_query($connection, $sql);
-					$id = mysqli_insert_id($connection);
-					if($id) {
-						header("Location: ?page=loomad");
-					} else {
-						header("Location: ?page=loomavorm");
-					}
-}
-}
-} else {
-	header("Location: ?page=loomad");
- }
-}
-include_once('views/loomavorm.html');
+		$sql = "SELECT * FROM kgarmatj_kylalised WHERE user_id='$user_id'";
+		$result = mysqli_query($connection, $sql);
+		$kylalised = mysqli_fetch_assoc($result);
+
+		$kylalised = array();
+
+		while(($row = mysqli_fetch_assoc($result))) {
+    		$kylalised[] = $row;
+		}
+
+		print_r($kylalised);
+
+	}
+	# Menüüvalikud
+
+
+	# TODO:
+	$sql_update = "
+		update kgarmatj_seaded
+		set		  ( user_id
+			  ,	rea_jarg
+			  , nimi
+			  , kaaslase_nimi
+			  , tulemas
+			  , menuu_valik
+			  , oobimine
+		where user_id
+		and  rea_jarg
+	";
+
+
+	include_once('views/kylalised.html');
 }
 
 

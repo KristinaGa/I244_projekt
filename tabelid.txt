@@ -29,3 +29,16 @@ CREATE TABLE IF NOT EXISTS `kgarmatj_seaded` (
   `menuu_2` varchar(100),
   foreign key (user_id) references kgarmatj_kylastajad (id)
 );
+
+
+CREATE TABLE IF NOT EXISTS `kgarmatj_kylalised` (
+  `rea_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `user_id` int(11),
+  `rea_jarg` int(11),
+  `nimi` varchar(100),
+  `kaaslase_nimi` varchar(100),
+  `tulemas` varchar(1),
+  `menuu_valik` varchar(100),
+  `oobimine` varchar(1),
+  foreign key (user_id) references kgarmatj_kylastajad (id)
+);
