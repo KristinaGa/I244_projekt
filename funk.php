@@ -71,26 +71,142 @@ function countdown(){
 	include_once('views/avaleht.html');
 }
 
+function saa_eelarve_summad($user_id) {
+	global $connection;
+	$sql_sum = "SELECT sum(planeeritud) planeeritud_summa, sum(tegelik) tegelik_summa FROM kgarmatj_eelarve WHERE user_id='$user_id'";
 
-function eelarve(){
-	//siia tuleb eelarve leht
-	global $connection;	
-	
-	if(empty($_SESSION["user"])) {
-		header("Location: ?page=login");
-	} else {	
-	$p= mysqli_query($connection, "select distinct(PUUR) as puur from kgarmatj_loomaaed order by puur asc");
-	$puurid=array();
-	while ($r=mysqli_fetch_assoc($p)) {
-		$l=mysqli_query($connection, "SELECT * FROM kgarmatj_loomaaed WHERE  puur=".mysqli_real_escape_string($connection, $r['puur']));
-		while ($row=mysqli_fetch_assoc($l)) {
-			$puurid[$r['puur']][]=$row;
+	$sum_result = mysqli_query($connection, $sql_sum);
+	$summad = mysqli_fetch_assoc($sum_result);
+
+	return $summad;
+}
+
+
+function saa_andmed_eelarve($user_id) {
+	global $connection;
+	$sql = "SELECT * FROM kgarmatj_eelarve WHERE user_id='$user_id'";
+	$eelarve = array();
+	$result = mysqli_query($connection, $sql);
+
+	while(($row = mysqli_fetch_assoc($result))) {
+		$eelarve[] = $row;
+	}
+
+	return $eelarve;
+}
+
+function eelarve() {
+	global $connection;
+	$user_id = mysqli_real_escape_string($connection, $_SESSION["useird"]);
+	// $sql = "SELECT * FROM kgarmatj_seaded WHERE user_id='$user_id'";
+	// $result = mysqli_query($connection, $sql);
+	// $result_array = mysqli_fetch_assoc($result);
+
+	$eelarve = saa_andmed_eelarve($user_id);
+	$summad = saa_eelarve_summad($user_id);
+	# Juhuks kui pole andmeid veel salvestatud
+	if (empty($eelarve)) {
+		$eelarve= array(array(
+			  'kulukoht' => ''
+			, 'planeeritud' => ''
+			, 'planeeritud_summa' => ''
+			, 'tegelik_summa' => ''
+			, 'tegelik' => ''
+			, 'rea_id' => ''
+			, 'rea_jarg' => ''
+		));
+	}
+
+	$teade = '';
+
+	if($_SERVER['REQUEST_METHOD'] == 'POST' and isset($_POST['salvesta'])) {
+		for ($i = 0; $i < count($_POST['kulukoht']); $i++) {
 			
+			try {
+				$rea_jarg = mysqli_real_escape_string($connection, $i);
+			} catch (Exception $e) {
+				$rea_jarg = '';		
+			}
+
+			try {
+				$kulukoht = mysqli_real_escape_string($connection, $_POST['kulukoht'][$i]);
+			} catch  (Exception $e) {
+				$kulukoht = '';
+			}
+
+			try {
+				$planeeritud = mysqli_real_escape_string($connection, $_POST['planeeritud'][$i]);
+			} catch  (Exception $e) {
+				$planeeritud = '';
+				
+			}
+
+			if (isset($_POST['tegelik'][$i])) {
+				try {
+					$tegelik = mysqli_real_escape_string($connection, $_POST['tegelik'][$i]);
+				} catch  (Exception $e) {
+					$tegelik = '';
+				}
+			}else {
+				$tegelik = '';
+			}
+							
+
+			if (isset($_POST['rea_id'])) {
+				$rea_id = mysqli_real_escape_string($connection, $_POST['rea_id'][$i]);
+			} else {
+				$rea_id = False;
+			}
+
+			$sql_insert = "insert into kgarmatj_eelarve
+									  ( user_id
+									  ,	rea_jarg
+									  , kulukoht
+									  , planeeritud
+									  , tegelik)
+							  values ( '$user_id'
+							  		 , '$rea_jarg'
+									 , '$kulukoht'
+									 , '$planeeritud'
+									 , '$tegelik')";
+
+			$sql_update = "update kgarmatj_eelarve
+							set	rea_jarg = '$rea_jarg'
+								, kulukoht = '$kulukoht'
+								, planeeritud = '$planeeritud'
+								, tegelik = '$tegelik'
+							where user_id = '$user_id'
+							and rea_id = '$rea_id'";
+
+			if ($rea_id != False) {
+			if (mysqli_query($connection, $sql_update) === TRUE) {
+				$eelarve = saa_andmed_eelarve($user_id);
+				$summad = saa_eelarve_summad($user_id);
+				$teade = 'Andmed salvestatud';
+			}} else {
+			if (mysqli_query($connection, $sql_insert) === TRUE) {
+				$eelarve = saa_andmed_eelarve($user_id);
+				$summad = saa_eelarve_summad($user_id);
+				$teade = 'Andmed salvestatud';
+			}
 	}
+}
+	} elseif (isset($_POST['kustuta'])) {
+
+		if (isset($_POST['del'])){
+			foreach ($_POST['del'] as $kustuta) {
+				 $sql = "delete from kgarmatj_eelarve where rea_id = $kustuta and user_id=$user_id";
+				 mysqli_query($connection, $sql);
+			}
+		$eelarve = saa_andmed_eelarve($user_id);
+		$summad = saa_eelarve_summad($user_id);
+		}
+
 	}
-	}
-include_once('views/puurid.html');
-}	
+
+	include_once('views/eelarve.html');
+}
+
 
 function saa_andmed($user_id) {
 	global $connection;
@@ -141,9 +257,7 @@ function kylalised() {
 			}
 
 			try {
-				error_log($_POST['nimi'][$i]);
 				$nimi = mysqli_real_escape_string($connection, $_POST['nimi'][$i]);
-				error_log($nimi);
 			} catch  (Exception $e) {
 				$nimi = '';
 			}

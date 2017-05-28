@@ -43,3 +43,14 @@ CREATE TABLE IF NOT EXISTS `kgarmatj_kylalised` (
   `oobimine` varchar(1),
   foreign key (user_id) references kgarmatj_kylastajad (id)
 );
+
+
+CREATE TABLE IF NOT EXISTS `kgarmatj_eelarve` (
+  `rea_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `user_id` int(11),
+  `rea_jarg` int(11),
+  `kulukoht` varchar(100),
+  `planeeritud` float(6,2),
+  `tegelik` float(6,2),
+  foreign key (user_id) references kgarmatj_kylastajad (id)
+);

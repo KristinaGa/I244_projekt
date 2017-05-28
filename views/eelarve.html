@@ -1,0 +1,93 @@
+<?php
+function selected($a,$b) {
+    if ($a == $b) {
+        return 'selected';
+    } else {
+        return '';
+    }
+}
+
+function fn($data) {
+  return $data;
+}
+
+function output_template($rida) {
+$fn = 'fn';
+$template = <<<EOD
+<tr id="tabelirida">
+    <input type="hidden" name="rea_jarg[]" value=$rida[rea_jarg]>
+    <input type="hidden" name="rea_id[]" value=$rida[rea_id]>
+    <td>
+        <input type="text" name="kulukoht[]" value="$rida[kulukoht]">
+    </td>
+    <td>
+        <input type="text" name="planeeritud[]" value="$rida[planeeritud]">
+    </td>
+    <td>
+        <input type="text" name="tegelik[]" value="$rida[tegelik]">
+    </td>
+    <td>
+        <input type="checkbox" name="del[]" value="$rida[rea_id]">
+    </td>
+</tr>
+EOD;
+return $template;
+}
+
+function output_ylevaade($summad) {
+$fn = 'fn';
+$vahe = floatval($summad["planeeritud_summa"]) - floatval($summad["tegelik_summa"]);
+$template = <<<EOD
+    <div class="countdown">
+        <div id="countdown_text">
+            <span>$summad[planeeritud_summa] €</span> planeeritud<br>
+            <span>$summad[tegelik_summa] €</span> tegelik<br>
+            <span>$vahe €</span> vahe
+        </div>
+    </div>
+EOD;
+return $template;
+}
+
+
+
+?>
+
+
+
+<script type="text/javascript">
+$(function(){
+    $('#lisa').click(function () {
+        var x = $('#tabelirida').clone();
+            x.find('input, select').val('')
+            x.appendTo('#eelarve_tabel');
+    });
+});    
+
+</script>
+<?php
+if (isset($summad)){
+
+    echo output_ylevaade($summad);
+}
+
+?>
+<form name='eelarve_vorm' action="?page=eelarve" method="POST">
+    <table id="eelarve_tabel">
+        <tr>
+            <th>Kulukoht</th>
+            <th>Planeeritud</th>
+            <th>Tegelik</th>
+            <th>Vali kustutamiseks</th>
+        </tr>
+        <?php 
+            foreach($eelarve as $rida) {
+               echo output_template($rida);
+        }
+        ?>
+    </table>
+    <button type="submit" name="salvesta">Salvesta</button>
+    <button type="button" name="lisa" id="lisa">Lisa rida</button>
+    <button type="submit" name="kustuta">Kustuta</button>
+    <h2><?php echo $teade ?></h2>
+</form>
