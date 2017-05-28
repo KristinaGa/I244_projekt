@@ -4,8 +4,10 @@
 function connect_db(){
 	global $connection;
 	$host="localhost";
-	$user="test";
-	$pass="t3st3r123";
+	// $user="test";
+	// $pass="t3st3r123";
+	$user="root"; //Localhost
+	$pass="root"; //Localhost
 	$db="test";
 	$connection = mysqli_connect($host, $user, $pass, $db) or die("ei saa ühendust mootoriga- ".mysqli_error());
 	mysqli_query($connection, "SET CHARACTER SET UTF8") or die("Ei saanud baasi utf-8-sse - ".mysqli_error($connection));
@@ -90,6 +92,21 @@ function eelarve(){
 include_once('views/puurid.html');
 }	
 
+function saa_andmed($user_id) {
+	global $connection;
+	$sql = "SELECT * FROM kgarmatj_kylalised WHERE user_id='$user_id'";
+	$result = mysqli_query($connection, $sql);
+
+
+	$kylalised = array();
+
+	while(($row = mysqli_fetch_assoc($result))) {
+		$kylalised[] = $row;
+	}
+	return $kylalised;
+}
+
+
 function kylalised() {
 	global $connection;
 	$user_id = mysqli_real_escape_string($connection, $_SESSION["useird"]);
@@ -97,19 +114,93 @@ function kylalised() {
 	$result = mysqli_query($connection, $sql);
 	$result_array = mysqli_fetch_assoc($result);
 
+	$kylalised = saa_andmed($user_id);
+	# Juhuks kui pole andmeid veel salvestatud
+	if (empty($kylalised)) {
+		$kylalised= array(array(
+			  'kaaslase_nimi' => ''
+			, 'menuu_valik' => ''
+			, 'kaaslase_menuu_valik' => ''
+			, 'nimi' => ''
+			, 'oobimine' => ''
+			, 'rea_id' => ''
+			, 'rea_jarg' => ''
+			, 'tulemas' => '' 
+		));
+	}
 
 	$teade = '';
 
-	if($_SERVER['REQUEST_METHOD'] == 'POST') {
-		print_r($_POST);
+	if($_SERVER['REQUEST_METHOD'] == 'POST' and isset($_POST['salvesta'])) {
 		for ($i = 0; $i < count($_POST['nimi']); $i++) {
+			
+			try {
+				$rea_jarg = mysqli_real_escape_string($connection, $i);
+			} catch (Exception $e) {
+				$rea_jarg = '';		
+			}
 
-			$rea_jarg = mysqli_real_escape_string($connection, $i);
-			$nimi = mysqli_real_escape_string($connection, $_POST['nimi'][$i]);
-			$kaaslase_nimi = mysqli_real_escape_string($connection, $_POST['kaaslase_nimi'][$i]);
-			$tulemas = mysqli_real_escape_string($connection, $_POST['tulemas'][$i]);
-			$menuu_valik = mysqli_real_escape_string($connection, $_POST['menuu_valik'][$i]);
-			$oobimine = mysqli_real_escape_string($connection, $_POST['oobimine'][$i]);
+			try {
+				error_log($_POST['nimi'][$i]);
+				$nimi = mysqli_real_escape_string($connection, $_POST['nimi'][$i]);
+				error_log($nimi);
+			} catch  (Exception $e) {
+				$nimi = '';
+			}
+
+			try {
+				$kaaslase_nimi = mysqli_real_escape_string($connection, $_POST['kaaslase_nimi'][$i]);
+			} catch  (Exception $e) {
+				$kaaslase_nimi = '';
+				
+			}
+
+			if (isset($_POST['tulemas'][$i])) {
+				try {
+					$tulemas = mysqli_real_escape_string($connection, $_POST['tulemas'][$i]);
+				} catch  (Exception $e) {
+					$tulemas = '';
+				}
+			}else {
+				$tulemas = '';
+			}
+
+			if (isset($_POST['menuu_valik'][$i])) {
+				try {
+					$menuu_valik = mysqli_real_escape_string($connection, $_POST['menuu_valik'][$i]);
+				} catch  (Exception $e) {
+					$menuu_valik = '';
+				}
+			} else {
+					$menuu_valik = '';
+			}
+
+			if (isset($_POST['kaaslase_menuu_valik'][$i])) {
+				try {
+					$kaaslase_menuu_valik = mysqli_real_escape_string($connection, $_POST['kaaslase_menuu_valik'][$i]);
+				} catch  (Exception $e) {
+					$kaaslase_menuu_valik = '';
+				}
+			} else {
+					$kaaslase_menuu_valik = '';
+			}
+			
+			if (isset($_POST['oobimine'][$i])){
+				try {
+					$oobimine = mysqli_real_escape_string($connection, $_POST['oobimine'][$i]);
+				} catch  (Exception $e) {
+					$oobimine = '';
+				}
+			}else {
+				$oobimine = '';
+			}			
+									
+
+			if (isset($_POST['rea_id'])) {
+				$rea_id = mysqli_real_escape_string($connection, $_POST['rea_id'][$i]);
+			} else {
+				$rea_id = False;
+			}
 
 			$sql_insert = "insert into kgarmatj_kylalised
 									  ( user_id
@@ -118,6 +209,7 @@ function kylalised() {
 									  , kaaslase_nimi
 									  , tulemas
 									  , menuu_valik
+									  , kaaslase_menuu_valik
 									  , oobimine)
 							  values ( '$user_id'
 							  		 , '$rea_jarg'
@@ -125,41 +217,42 @@ function kylalised() {
 									 , '$kaaslase_nimi'
 									 , '$tulemas'
 									 , '$menuu_valik'
+									 , '$kaaslase_menuu_valik'
 									 , '$oobimine')";
 
-			mysqli_query($connection, $sql_insert);
+			$sql_update = "update kgarmatj_kylalised
+							set	rea_jarg = '$rea_jarg'
+								, nimi = '$nimi'
+								, kaaslase_nimi = '$kaaslase_nimi'
+								, tulemas = '$tulemas'
+								, menuu_valik = '$menuu_valik'
+								, kaaslase_menuu_valik = '$kaaslase_menuu_valik'
+								, oobimine = '$oobimine'
+							where user_id = '$user_id'
+							and rea_id = '$rea_id'";
+
+			if ($rea_id != False) {
+			if (mysqli_query($connection, $sql_update) === TRUE) {
+				$kylalised = saa_andmed($user_id);
+				$teade = 'Andmed salvestatud';
+			}} else {
+			if (mysqli_query($connection, $sql_insert) === TRUE) {
+				$kylalised = saa_andmed($user_id);
+				$teade = 'Andmed salvestatud';
+			}
 	}
-	} else {
-		$sql = "SELECT * FROM kgarmatj_kylalised WHERE user_id='$user_id'";
-		$result = mysqli_query($connection, $sql);
-		$kylalised = mysqli_fetch_assoc($result);
+}
+	} elseif (isset($_POST['kustuta'])) {
 
-		$kylalised = array();
-
-		while(($row = mysqli_fetch_assoc($result))) {
-    		$kylalised[] = $row;
+		if (isset($_POST['del'])){
+			foreach ($_POST['del'] as $kustuta) {
+				 $sql = "delete from kgarmatj_kylalised where rea_id = $kustuta and user_id=$user_id";
+				 mysqli_query($connection, $sql);
+			}
+		$kylalised = saa_andmed($user_id);
 		}
 
-		print_r($kylalised);
-
 	}
-	# Menüüvalikud
-
-
-	# TODO:
-	$sql_update = "
-		update kgarmatj_seaded
-		set		  ( user_id
-			  ,	rea_jarg
-			  , nimi
-			  , kaaslase_nimi
-			  , tulemas
-			  , menuu_valik
-			  , oobimine
-		where user_id
-		and  rea_jarg
-	";
-
 
 	include_once('views/kylalised.html');
 }
@@ -200,7 +293,7 @@ function seaded(){
 					, nimi_1 = '$nimi_1'
 					, nimi_2 = '$nimi_2'
 					, menuu_1 = '$menuu_1'
-					, menuu_2 = '$menuu_1'
+					, menuu_2 = '$menuu_2'
 				where user_id = '$user_id'
 			";
 

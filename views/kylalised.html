@@ -1,5 +1,63 @@
 <?php
+function selected($a,$b) {
+    if ($a == $b) {
+        return 'selected';
+    } else {
+        return '';
+    }
+}
 
+function fn($data) {
+  return $data;
+}
+
+function output_template($rida, $result_array) {
+$fn = 'fn';
+$template = <<<EOD
+<tr id="tabelirida">
+    <input type="hidden" name="rea_jarg[]" value=$rida[rea_jarg]>
+    <input type="hidden" name="rea_id[]" value=$rida[rea_id]>
+    <td>
+        <input type="text" name="nimi[]" value="$rida[nimi]">
+    </td>
+    <td>
+        <input type="text" name="kaaslase_nimi[]" value="$rida[kaaslase_nimi]">
+    </td>
+    <td>
+        <select name="tulemas[]">
+            <option value="O" {$fn(selected($rida["tulemas"],'O'))}></option>
+            <option value="Y" {$fn(selected($rida["tulemas"],'Y'))}>Jah</option>
+            <option value="N" {$fn(selected($rida["tulemas"],'N'))}>Ei</option>
+        </select>
+    </td>
+    <td>
+        <select name="menuu_valik[]">
+            <option value="O" {$fn(selected($rida["menuu_valik"],'O'))}></option>
+            <option value="$result_array[menuu_1]" {$fn(selected($rida["menuu_valik"],$result_array["menuu_1"]))}>$result_array[menuu_1]</option>
+            <option value="$result_array[menuu_2]" {$fn(selected($rida["menuu_valik"],$result_array["menuu_2"]))}>$result_array[menuu_2]</option>                    
+        </select>
+    </td>
+    <td>
+        <select name="kaaslase_menuu_valik[]">
+            <option value="O" {$fn(selected($rida["kaaslase_menuu_valik"],'O'))}></option>
+            <option value="$result_array[menuu_1]" {$fn(selected($rida["menuu_valik"],$result_array["menuu_1"]))}>$result_array[menuu_1]</option>
+            <option value="$result_array[menuu_2]" {$fn(selected($rida["menuu_valik"],$result_array["menuu_2"]))}>$result_array[menuu_2]</option>                    
+        </select>
+    </td>    
+    <td>
+     <select name="oobimine[]">
+            <option value="O" {$fn(selected($rida["oobimine"],'O'))} ></option>
+            <option value="Y" {$fn(selected($rida["oobimine"],'Y'))} >Jah</option>
+            <option value="N" {$fn(selected($rida["oobimine"],'N'))} >Ei</option>
+        </select>
+    </td>
+    <td>
+        <input type="checkbox" name="del[]" value="$rida[rea_id]">
+    </td>
+</tr>
+EOD;
+return $template;
+}
 ?>
 
 
@@ -7,7 +65,9 @@
 <script type="text/javascript">
 $(function(){
     $('#lisa').click(function () {
-        $('#tabelirida').clone().appendTo('#kylalised_tabel');
+        var x = $('#tabelirida').clone();
+            x.find('input, select').val('')
+            x.appendTo('#kylalised_tabel');
     });
 });    
 
@@ -19,41 +79,18 @@ $(function(){
             <th>Kaaslase nimi</th>
             <th>Tulemas</th>
             <th>Menüüvalik</th>
+            <th>Kaaslase menüüvalik</th>
             <th>Ööbimissoov</th>
+            <th>Vali kustutamiseks</th>
         </tr>
-        <tr id="tabelirida">
-            <td>
-                <input type="text" name="nimi[]">
-            </td>
-            <td>
-                <input type="text" name="kaaslase_nimi[]">
-            </td>
-            <td>
-                <select name="tulemas[]">
-                    <option value="O"  selected></option>
-                    <option value="Y">Jah</option>
-                    <option value="N">Ei</option>
-                </select>
-            </td>
-            <td>
-                <select name="menuu_valik[]">
-                    <option value="O"  selected></option>
-                    <option value="<?php echo $result_array['menuu_1']?>"><?php echo $result_array['menuu_1']?></option>
-                    <option value="<?php echo $result_array['menuu_2']?>"><?php echo $result_array['menuu_2']?></option>                    
-                </select>
-            </td>
-            <td>
-             <select name="oobimine[]">
-                    <option value="O"  selected></option>
-                    <option value="Y">Jah</option>
-                    <option value="N">Ei</option>
-                </select>
-            </td>
-        </tr>
+        <?php 
+            foreach($kylalised as $rida) {
+               echo output_template($rida, $result_array);
+        }
+        ?>
     </table>
     <button type="submit" name="salvesta">Salvesta</button>
     <button type="button" name="lisa" id="lisa">Lisa rida</button>
+    <button type="submit" name="kustuta">Kustuta</button>
     <h2><?php echo $teade ?></h2>
 </form>
-
-

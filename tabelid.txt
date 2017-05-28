@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS `kgarmatj_kylalised` (
   `kaaslase_nimi` varchar(100),
   `tulemas` varchar(1),
   `menuu_valik` varchar(100),
+  `kaaslase_menuu_valik` varchar(100),
   `oobimine` varchar(1),
   foreign key (user_id) references kgarmatj_kylastajad (id)
 );
