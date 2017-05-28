@@ -18,10 +18,10 @@ $template = <<<EOD
     <input type="hidden" name="rea_jarg[]" value=$rida[rea_jarg]>
     <input type="hidden" name="rea_id[]" value=$rida[rea_id]>
     <td>
-        <input type="text" name="nimi[]" value="$rida[nimi]">
+        <input class="input" type="text" name="nimi[]" value="$rida[nimi]">
     </td>
     <td>
-        <input type="text" name="kaaslase_nimi[]" value="$rida[kaaslase_nimi]">
+        <input class="input" type="text" name="kaaslase_nimi[]" value="$rida[kaaslase_nimi]">
     </td>
     <td>
         <select name="tulemas[]">
@@ -89,8 +89,8 @@ $(function(){
         }
         ?>
     </table>
-    <button type="submit" name="salvesta">Salvesta</button>
-    <button type="button" name="lisa" id="lisa">Lisa rida</button>
-    <button type="submit" name="kustuta">Kustuta</button>
+    <button class="btn" type="submit" name="salvesta">Salvesta</button>
+    <button class="btn" type="button" name="lisa" id="lisa">Lisa rida</button>
+    <button class="btn" type="submit" name="kustuta">Kustuta</button>
     <h2><?php echo $teade ?></h2>
 </form>

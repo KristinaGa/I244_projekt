@@ -4,10 +4,8 @@
 function connect_db(){
 	global $connection;
 	$host="localhost";
-	// $user="test";
-	// $pass="t3st3r123";
-	$user="root"; //Localhost
-	$pass="root"; //Localhost
+	$user="test";
+	$pass="t3st3r123";
 	$db="test";
 	$connection = mysqli_connect($host, $user, $pass, $db) or die("ei saa ühendust mootoriga- ".mysqli_error());
 	mysqli_query($connection, "SET CHARACTER SET UTF8") or die("Ei saanud baasi utf-8-sse - ".mysqli_error($connection));
@@ -57,7 +55,7 @@ function logout(){
 function countdown(){
 	global $connection;
 	$user_id = mysqli_real_escape_string ($connection, $_SESSION["useird"]);
-	$sql = "SELECT pulma_kuupaev, concat(nimi_1,' ja ', nimi_2, ' pulmadeni on: ') countdown_text FROM kgarmatj_seaded WHERE user_id='$user_id'";
+	$sql = "SELECT pulma_kuupaev, concat(nimi_1,' ja ', nimi_2, ' pulmadeni on') countdown_text FROM kgarmatj_seaded WHERE user_id='$user_id'";
 	$result = mysqli_query($connection, $sql);
 	$result_array = mysqli_fetch_assoc($result);
 	$pulma_kuupaev = $result_array['pulma_kuupaev'];

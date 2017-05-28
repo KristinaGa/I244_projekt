@@ -1,25 +1,28 @@
+
+<div class="container">
 <form name='seaded_vorm' action="?page=seaded" method="POST">
     <div>
         <label for="date">Pulma kuupäev</label>
-        <input id="date" type="date" name="pulma_kuupaev" value="<?php echo isset($_POST['pulma_kuupaev']) ? $_POST['pulma_kuupaev'] : $pulma_kuupaev ?>">
+        <input id="date" class="input wide" type="date" name="pulma_kuupaev" value="<?php echo isset($_POST['pulma_kuupaev']) ? $_POST['pulma_kuupaev'] : $pulma_kuupaev ?>">
     </div>
     <div>
-        <label for="nimi1">1. Abielluja nimi</label>
-        <input id="nimi1" type="text" name="nimi_1" value="<?php echo isset($_POST['nimi_1']) ? $_POST['nimi_1'] : $nimi_1 ?>">
+        <label for="nimi1">1. abielluja nimi</label>
+        <input id="nimi1" class="input wide" type="text" name="nimi_1" value="<?php echo isset($_POST['nimi_1']) ? $_POST['nimi_1'] : $nimi_1 ?>">
     </div>
     <div>
-        <label for="nimi2">2. Abielluja nimi</label>
-        <input id="nimi2"type="text" name="nimi_2" value="<?php echo isset($_POST['nimi_2']) ? $_POST['nimi_2'] : $nimi_2 ?>">
+        <label for="nimi2">2. abielluja nimi</label>
+        <input id="nimi2" class="input wide" type="text" name="nimi_2" value="<?php echo isset($_POST['nimi_2']) ? $_POST['nimi_2'] : $nimi_2 ?>">
     </div>
 
     <div>
-        <label for="menuu_1">1. Menuüüvalik</label>
-        <input id="menuu_1" type="text" name="menuu_1" value="<?php echo isset($_POST['menuu_1']) ? $_POST['menuu_1'] : $menuu_1 ?>">
+        <label for="menuu_1">1. menüüvalik</label>
+        <input id="menuu_1" class="input wide" type="text" name="menuu_1" value="<?php echo isset($_POST['menuu_1']) ? $_POST['menuu_1'] : $menuu_1 ?>">
     </div>
     <div>
-        <label for="menuu_2">2. Menuüüvalik</label>
-        <input id="menuu_2" type="text" name="menuu_2" value="<?php echo isset($_POST['menuu_2']) ? $_POST['menuu_2'] : $menuu_2 ?>">
+        <label for="menuu_2">2. menüüvalik</label>
+        <input id="menuu_2" class="input wide" type="text" name="menuu_2" value="<?php echo isset($_POST['menuu_2']) ? $_POST['menuu_2'] : $menuu_2 ?>">
     </div>
-    <button type="submit" name="salvesta">Salvesta</button>
+    <button class="btn" type="submit" name="salvesta">Salvesta</button>
     <h2><?php echo $teade ?></h2>
 </form>
+</div>
